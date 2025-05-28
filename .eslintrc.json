@@ -1,0 +1,33 @@
+{
+  "overrides": [
+    {
+      "files": [
+        "**/*.js"
+      ],
+      "env": {
+        "node": true
+      },
+      "extends": [
+        "airbnb-base"
+      ],
+      "parserOptions": {
+        "sourceType": "commonjs"
+      },
+      "rules": {
+        "no-underscore-dangle": "off",
+        "class-methods-use-this": "off"
+      }
+    },
+    {
+      "files": [
+        "**/*.{js,mjs,cjs}"
+      ],
+      "env": {
+        "browser": true
+      },
+      "globals": {
+        "browser": "readonly"
+      }
+    }
+  ]
+}
