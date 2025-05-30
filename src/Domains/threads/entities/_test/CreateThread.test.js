@@ -9,18 +9,18 @@ describe('CreateThread entities', () => {
     };
 
     // Action & Assert
-    expect(() => new CreateThread(payload)).toThrow('CREATE_THREAD_NOT_MEET_DATA_TYPE_SPESIFICATION');
+    expect(() => new CreateThread(payload)).toThrow('CREATE_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
-  it('should throw error when payload not contain needed property', () => {
+  it('should throw error when payload not meet data type specification', () => {
     // Arrange
     const payload = {
       title: true,
-      body: null,
+      body: true,
     };
 
     // Action & Assert
-    expect(() => new CreateThread(payload)).toThrow('CREATE_THREAD_NOT_MEET_DATA_TYPE_SPESIFICATION');
+    expect(() => new CreateThread(payload)).toThrow('CREATE_THREAD.NOT_MEET_DATA_TYPE_SPESIFICATION');
   });
 
   it('should create thread entities correctly', () => {

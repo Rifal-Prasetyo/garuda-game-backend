@@ -1,6 +1,6 @@
 class CreateThread {
   constructor(payload) {
-    this._verifyPayload = payload;
+    this._verifyPayload(payload);
     const { title, body } = payload;
     this.title = title;
     this.body = body;
