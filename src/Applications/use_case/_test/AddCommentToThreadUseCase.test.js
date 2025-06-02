@@ -14,7 +14,7 @@ describe('AddCommentToThreadUseCase', () => {
   it('should throw error when not meet data spesification', async () => {
     // Arrange
     const useCasePayload = {
-      credentialId: [],
+      credentialId: ['ya'],
       threadId: { key: 'value' },
       data: {
         content: true,
@@ -28,10 +28,10 @@ describe('AddCommentToThreadUseCase', () => {
   it('should orchestrating the add comment to thread action correctly', async () => {
     // Arrange
     const useCasePayload = {
-      credentialId: [],
-      threadId: { key: 'value' },
+      credentialId: 'user-122',
+      threadId: 'thread-122',
       data: {
-        content: true,
+        content: 'saya setuju',
       },
     };
 
@@ -57,6 +57,6 @@ describe('AddCommentToThreadUseCase', () => {
       content: useCasePayload.data.content,
       owner: 'user-122',
     }));
-    expect(mockCommentRepository.addCommentToThread).toHaveBeenCalledWith({ ...useCasePayload.data, owner: 'user-122' });
+    expect(mockCommentRepository.addCommentToThread).toHaveBeenCalledWith({ ...useCasePayload.data, owner: 'user-122', threadId: useCasePayload.threadId });
   });
 });
