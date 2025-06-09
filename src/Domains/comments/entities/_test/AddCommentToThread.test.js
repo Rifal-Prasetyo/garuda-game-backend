@@ -12,7 +12,9 @@ describe('A AddCommentToThread entity', () => {
   it('should throw error when payload not meet data type specification', () => {
     // Arrange
     const payload = {
+      threadId: ['string'],
       content: true,
+      owner: { key: 'value' },
     };
 
     // Action & Assert
@@ -21,7 +23,9 @@ describe('A AddCommentToThread entity', () => {
   it('should create AddCommentToThread entities correctly', () => {
     // Arrange
     const payload = {
+      threadId: 'thread-blsfjdsf',
       content: 'Izin tanya pada thread #12',
+      owner: 'user-123',
     };
 
     // Action

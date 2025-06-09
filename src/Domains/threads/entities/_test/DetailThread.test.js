@@ -17,11 +17,11 @@ describe('DetailThread entity', () => {
       title: true,
       body: true,
       date: true,
-      username: true,
+      owner: true,
       comments: [
         {
           id: true,
-          username: true,
+          owner: true,
           date: true,
           content: true,
         },
@@ -37,13 +37,13 @@ describe('DetailThread entity', () => {
       id: 'thread-h_2FkLZhtgBKY2kh4CC02',
       title: 'AI sangat mengerikan, bagaimana cara bertahan hidup',
       body: 'Sekarang hampir semua aspek menggunakan kecerdasan buatan, sangat menegerikan',
-      date: '2021-08-08T07:19:09.775Z',
-      username: 'dicoding',
+      date: new Date('2021-08-08T07:19:09.775Z'),
+      owner: 'dicoding',
       comments: [
         {
           id: 'comment-_pby2_tmXV6bcvcdev8xk',
-          username: 'johndoe',
-          date: '2021-08-08T07:22:33.555Z',
+          owner: 'johndoe',
+          date: new Date('2021-08-08T07:22:33.555Z'),
           content: 'sebuah comment',
         },
       ],
@@ -57,7 +57,7 @@ describe('DetailThread entity', () => {
     expect(detailThead.title).toEqual(payload.title);
     expect(detailThead.body).toEqual(payload.body);
     expect(detailThead.date).toEqual(payload.date);
-    expect(detailThead.username).toEqual(payload.username);
+    expect(detailThead.owner).toEqual(payload.owner);
     expect(detailThead.title).toEqual(payload.title);
     expect(detailThead.comments).toEqual(payload.comments);
   });
