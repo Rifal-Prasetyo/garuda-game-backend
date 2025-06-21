@@ -7,7 +7,6 @@ class CreateThreadUseCase {
 
   async execute(useCasePayload) {
     this._validatePayload(useCasePayload);
-
     const { title, body } = useCasePayload.data;
     const { credentialId: id } = useCasePayload;
     const createThread = new CreateThread({ title, body });
