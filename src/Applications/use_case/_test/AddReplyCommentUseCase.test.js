@@ -1,6 +1,8 @@
 const AddReplyCommentUseCase = require('../AddReplyCommentUseCase');
 const CommentRepository = require('../../../Domains/comments/CommentRepository');
 const AddedReplyComment = require('../../../Domains/comments/entities/AddedReplyComment');
+const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
+const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
 
 describe('AddReplyCommentUseCase', () => {
   it('should throw error when not contain property', async () => {
@@ -26,7 +28,61 @@ describe('AddReplyCommentUseCase', () => {
     // Action & Assert
     await expect(addReplyCommentUseCase.execute(useCasePayload)).rejects.toThrow('ADD_REPLY_COMMENT_USE_CASE.NOT_MEET_DATA_SPESIFICATION');
   });
+  it('should throw error when not found thread', async () => {
+    // Arrange
+    const useCasePayload = {
+      threadId: 'thread-blablabal',
+      commentId: 'comment-ksjfndfs',
+      content: 'mencoba membalas komentar',
+      owner: 'user-ksdjfksndf',
+    };
 
+    //   creating dependency of use case
+    const mockCommentRepository = new CommentRepository();
+    const mockThreadRepository = new ThreadRepository();
+
+    // Mocking needed function
+    mockThreadRepository.getDetailThread = jest.fn()
+      .mockImplementation(() => Promise.reject(new NotFoundError()));
+    // creating use case instance
+    const addReplyCommentUseCase = new AddReplyCommentUseCase({
+      commentRepository: mockCommentRepository,
+      threadRepository: mockThreadRepository,
+    });
+
+    // Action & Assert
+    await expect(addReplyCommentUseCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+    expect(mockThreadRepository.getDetailThread).toHaveBeenCalledWith(useCasePayload.threadId);
+  });
+  it('should throw error when invalid comment id', async () => {
+    // Arrange
+    const useCasePayload = {
+      threadId: 'thread-blablabal',
+      commentId: 'comment-ksjfndfs',
+      content: 'mencoba membalas komentar',
+      owner: 'user-ksdjfksndf',
+    };
+
+    //   creating dependency of use case
+    const mockCommentRepository = new CommentRepository();
+    const mockThreadRepository = new ThreadRepository();
+
+    // Mocking needed function
+    mockThreadRepository.getDetailThread = jest.fn()
+      .mockImplementation(() => Promise.resolve());
+    mockCommentRepository.getCommentById = jest.fn()
+      .mockImplementation(() => Promise.reject(new NotFoundError()));
+    // creating use case instance
+    const addReplyCommentUseCase = new AddReplyCommentUseCase({
+      commentRepository: mockCommentRepository,
+      threadRepository: mockThreadRepository,
+    });
+
+    // Action & Assert
+    await expect(addReplyCommentUseCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
+    expect(mockThreadRepository.getDetailThread).toHaveBeenCalledWith(useCasePayload.threadId);
+    expect(mockCommentRepository.getCommentById).toHaveBeenCalledWith(useCasePayload.commentId);
+  });
   it('should orchestrating add reply comment use case correctly', async () => {
     // Arrange
     const useCasePayload = {
@@ -43,14 +99,20 @@ describe('AddReplyCommentUseCase', () => {
 
     //   creating dependency of use case
     const mockCommentRepository = new CommentRepository();
+    const mockThreadRepository = new ThreadRepository();
 
     // Mocking needed function
+    mockThreadRepository.getDetailThread = jest.fn()
+      .mockImplementation(() => Promise.resolve());
+    mockCommentRepository.getCommentById = jest.fn()
+      .mockImplementation(() => Promise.resolve(mockAddedReplyComment));
     mockCommentRepository.addReplyComment = jest.fn()
       .mockImplementation(() => Promise.resolve(mockAddedReplyComment));
 
     // creating use case instance
     const addReplyCommentUseCase = new AddReplyCommentUseCase({
       commentRepository: mockCommentRepository,
+      threadRepository: mockThreadRepository,
     });
 
     // Action
@@ -62,6 +124,7 @@ describe('AddReplyCommentUseCase', () => {
       content: useCasePayload.content,
       owner: useCasePayload.owner,
     }));
+    expect(mockThreadRepository.getDetailThread).toHaveBeenCalledWith(useCasePayload.threadId);
     expect(mockCommentRepository.addReplyComment).toHaveBeenCalledWith(useCasePayload);
   });
 });

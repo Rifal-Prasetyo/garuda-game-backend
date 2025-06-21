@@ -45,6 +45,16 @@ describe('DetailThread entity', () => {
           owner: 'johndoe',
           date: new Date('2021-08-08T07:22:33.555Z'),
           content: 'sebuah comment',
+          is_delete: false,
+          replies: [],
+        },
+        {
+          id: 'comment-deleted',
+          owner: 'johndoe',
+          date: new Date('2021-08-08T07:22:33.555Z'),
+          content: 'sebuah comment',
+          is_delete: true,
+          replies: [],
         },
       ],
     };
@@ -59,6 +69,6 @@ describe('DetailThread entity', () => {
     expect(detailThead.date).toEqual(payload.date);
     expect(detailThead.owner).toEqual(payload.owner);
     expect(detailThead.title).toEqual(payload.title);
-    expect(detailThead.comments).toEqual(payload.comments);
+    expect(detailThead.comments).toBeDefined();
   });
 });

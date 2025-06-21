@@ -97,7 +97,10 @@ describe('CommentRepositoryPostgres', () => {
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 
       // Action & Assert
-      await expect(commentRepositoryPostgres.deleteReplyComment(deleteReplyCommentPayload))
+      await expect(commentRepositoryPostgres
+        .deleteReplyComment({
+          id: deleteReplyCommentPayload.threadId, commentId: deleteReplyCommentPayload.replyId,
+        }))
         .resolves.not.toThrow(NotFoundError);
     });
   });
@@ -114,6 +117,18 @@ describe('CommentRepositoryPostgres', () => {
       await expect(commentRepositoryPostgres.getCommentById(commentId)).resolves.not.toThrow();
       const comment = await CommentTableTestHelper.findCommentById(commentId);
       expect(comment).toHaveLength(1);
+    });
+  });
+  describe('verifyCommentOwner function', () => {
+    it('should not throw error if has comment with correct owner', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadTableTestHelper.createThread({ id: 'thread-blbalbal' });
+      await CommentTableTestHelper.addCommentToThread({ id: 'comment-123' });
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
+
+      // Action & Assert
+      await expect(commentRepositoryPostgres.verifyCommentOwner('user-123', 'comment-123')).resolves.not.toThrow();
     });
   });
 });

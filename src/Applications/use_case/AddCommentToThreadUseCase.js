@@ -1,12 +1,14 @@
 class AddCommentToThreadUseCase {
-  constructor({ commentRepository }) {
+  constructor({ commentRepository, threadRepository }) {
     this._commentRepository = commentRepository;
+    this._threadRepository = threadRepository;
   }
 
   async execute(payload) {
     this._valdiatePayload(payload);
     const { credentialId: owner, threadId } = payload;
     const { content } = payload.data;
+    await this._threadRepository.getDetailThread(threadId);
     const addCommentToThread = await this._commentRepository
       .addCommentToThread({ owner, threadId, content });
     return addCommentToThread;

@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 class DetailThread {
   constructor(payload) {
     this._verifyPayload(payload);
@@ -9,7 +10,23 @@ class DetailThread {
     this.body = body;
     this.date = date;
     this.owner = owner;
-    this.comments = comments;
+    this._manipulateComments(comments);
+  }
+
+  _manipulateComments(comments) {
+    this.comments = comments.map((comment) => {
+      const replies = comment.replies.map((reply) => {
+        if (reply.is_delete) {
+          return { ...reply, content: '**Balasan telah dihapus**' };
+        }
+        return reply;
+      });
+
+      if (comment.is_delete) {
+        return { ...comment, content: '**Komentar telah dihapus**', replies };
+      }
+      return { ...comment, replies };
+    });
   }
 
   _verifyPayload(payload) {

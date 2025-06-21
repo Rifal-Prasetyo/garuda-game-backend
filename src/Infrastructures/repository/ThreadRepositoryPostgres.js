@@ -32,13 +32,31 @@ class ThreadRepositoryPostgres extends ThreadRepository {
       throw new NotFoundError();
     }
     const thread = threadResult.rows[0];
-
     const commentQuery = {
-      text: "SELECT * FROM comments WHERE 'threadId' = $1 ORDER BY date ASC",
+      text: `
+        SELECT * FROM comments
+        WHERE "threadId" = $1
+        ORDER BY date ASC
+      `,
       values: [id],
     };
     const commentResult = await this._pool.query(commentQuery);
-    return new DetailThread({ ...thread, comments: commentResult.rows });
+    const comments = [];
+    const repliesMap = {};
+    commentResult.rows.forEach((row) => {
+      if (!row.commentId) {
+        comments.push({ ...row, replies: [] });
+      } else {
+        if (!repliesMap[row.commentId]) repliesMap[row.commentId] = [];
+        repliesMap[row.commentId].push(row);
+      }
+    });
+    comments.forEach((comment) => {
+      // eslint-disable-next-line no-param-reassign
+      comment.replies = repliesMap[comment.id] || [];
+    });
+
+    return new DetailThread({ ...thread, comments });
   }
 }
 

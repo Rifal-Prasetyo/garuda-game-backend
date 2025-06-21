@@ -28,8 +28,18 @@ describe('GetDetailThreadUseCase', () => {
         {
           id: 'comment-_pby2_tmXV6bcvcdev8xk',
           username: 'johndoe',
+          commentId: undefined,
           date: new Date('2021-08-08T07:22:33.555Z'),
           content: 'sebuah comment',
+          replies: [
+            {
+              id: 'reply-_pby2_tmXV6bcvcdev8xk',
+              username: 'johndoe',
+              commentId: 'comment-_pby2_tmXV6bcvcdev8xk',
+              date: new Date('2021-08-08T07:22:33.555Z'),
+              content: 'sebuah comment',
+            },
+          ],
         },
       ],
     });
@@ -45,7 +55,6 @@ describe('GetDetailThreadUseCase', () => {
 
     // Action
     const actualGetDetailThreadUseCase = await getDetailThreadUseCase.execute(useCasePayload);
-
     // Action & Assert
     expect(actualGetDetailThreadUseCase).toStrictEqual(mockDetailThread);
     expect(mockThreadRepository.getDetailThread).toHaveBeenCalledWith(useCasePayload.threadId);

@@ -1,4 +1,6 @@
+/* eslint-disable quotes */
 const AuthorizationError = require('../../Commons/exceptions/AuthorizationError');
+const NotFoundError = require('../../Commons/exceptions/NotFoundError');
 const CommentRepository = require('../../Domains/comments/CommentRepository');
 const AddedCommentToThread = require('../../Domains/comments/entities/AddedCommentToThread');
 const AddedReplyComment = require('../../Domains/comments/entities/AddedReplyComment');
@@ -23,17 +25,18 @@ class CommentRepositoryPostgres extends CommentRepository {
   }
 
   async deleteCommentToThread(commentId) {
+    /* Soft delete */
     const query = {
-      text: 'DELETE FROM comments WHERE id = $1',
+      text: 'UPDATE comments SET is_delete = TRUE WHERE id = $1',
       values: [commentId],
     };
     await this._pool.query(query);
   }
 
-  async verifyCommentOwner(userId, commentId) {
+  async verifyCommentOwner(owner, commentId) {
     const query = {
       text: 'SELECT * FROM comments WHERE owner = $1 AND id = $2',
-      values: [userId, commentId],
+      values: [owner, commentId],
     };
     const result = await this._pool.query(query);
     if (!result.rowCount) {
@@ -55,10 +58,10 @@ class CommentRepositoryPostgres extends CommentRepository {
     return new AddedReplyComment({ ...result.rows[0] });
   }
 
-  async deleteReplyComment(id) {
+  async deleteReplyComment({ id, commentId }) {
     const query = {
-      text: 'DELETE FROM comments WHERE id = $1',
-      values: [id],
+      text: `UPDATE comments SET is_delete = TRUE WHERE id = $1 AND "commentId" = $2`,
+      values: [id, commentId],
     };
     await this._pool.query(query);
   }
@@ -69,6 +72,9 @@ class CommentRepositoryPostgres extends CommentRepository {
       values: [id],
     };
     const result = await this._pool.query(query);
+    if (!result.rowCount) {
+      throw new NotFoundError();
+    }
     return result.rows[0];
   }
 }

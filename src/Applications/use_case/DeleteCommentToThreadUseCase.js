@@ -9,6 +9,7 @@ class DeleteCommentToThreadUseCase {
     // try {
     this._validatePayload(payload);
     const { commentId, owner } = payload;
+    await this._commentRepository.getCommentById(commentId);
     await this._commentRepository.verifyCommentOwner(owner, commentId);
     await this._commentRepository.deleteCommentToThread(commentId);
     // } catch (error) {

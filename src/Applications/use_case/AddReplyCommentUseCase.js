@@ -1,11 +1,15 @@
 class AddReplyCommentUseCase {
-  constructor({ commentRepository }) {
-    this.commentRepository = commentRepository;
+  constructor({ commentRepository, threadRepository }) {
+    this._commentRepository = commentRepository;
+    this._threadRepository = threadRepository;
   }
 
   async execute(payload) {
     this._verifyPayload(payload);
-    const addReplyComment = await this.commentRepository.addReplyComment(payload);
+    const { threadId, commentId } = payload;
+    await this._threadRepository.getDetailThread(threadId);
+    await this._commentRepository.getCommentById(commentId);
+    const addReplyComment = await this._commentRepository.addReplyComment(payload);
     return addReplyComment;
   }
 

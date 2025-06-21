@@ -76,7 +76,6 @@ class ThreadHandler {
   async getDetailThreadHandler(request) {
     const detailThreadUseCase = this._container.getInstance(GetDetailThreadUseCase.name);
     const detailThread = await detailThreadUseCase.execute(request.params);
-
     return {
       status: 'success',
       data: {
@@ -110,7 +109,12 @@ class ThreadHandler {
 
   async deleteReplyCommentHandler(request) {
     const deleteReplyCommentUseCase = this._container.getInstance(DeleteReplyCommentUseCase.name);
-    await deleteReplyCommentUseCase.execute(request.params);
+    const { id: owner } = request.auth.credentials.id;
+    const payload = {
+      ...request.params,
+      owner,
+    };
+    await deleteReplyCommentUseCase.execute(payload);
 
     const response = {
       status: 'success',
