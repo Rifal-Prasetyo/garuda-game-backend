@@ -25,6 +25,18 @@ describe('AddCommentToThreadUseCase', () => {
     // Action & Assert
     await expect(addCommentToThreadUseCase.execute(useCasePayload)).rejects.toThrow('ADD_COMMENT_TO_THREAD.NOT_MEET_DATA_SPESIFICATION');
   });
+  it('should throw error when not contain needed property in data', async () => {
+    // Arrange
+    const useCasePayload = {
+      credentialId: ['ya'],
+      threadId: { key: 'value' },
+      data: {},
+    };
+    const addCommentToThreadUseCase = new AddCommentToThreadUseCase({});
+
+    // Action & Assert
+    await expect(addCommentToThreadUseCase.execute(useCasePayload)).rejects.toThrow('ADD_COMMENT_TO_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
+  });
   it('should orchestrating the add comment to thread action correctly', async () => {
     // Arrange
     const useCasePayload = {

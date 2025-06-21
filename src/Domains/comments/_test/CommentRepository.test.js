@@ -10,4 +10,5 @@ it('should throw error when invoke abstract behavior', async () => {
   await expect(commentRepository.addReplyComment({})).rejects.toThrow('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   await expect(commentRepository.deleteReplyComment({})).rejects.toThrow('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
   await expect(commentRepository.getCommentById({})).rejects.toThrow('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
+  await expect(commentRepository.verifyCommentOwner({})).rejects.toThrow('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED');
 });

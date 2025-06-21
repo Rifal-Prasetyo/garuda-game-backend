@@ -2,13 +2,13 @@ class GetDetailThreadUseCase {
   constructor({
     threadRepository,
   }) {
-    this.threadRepository = threadRepository;
+    this._threadRepository = threadRepository;
   }
 
   async execute(payload) {
     this._verifyPayload(payload);
     const { threadId } = payload;
-    const threadDetail = await this.threadRepository.getDetailThread(threadId);
+    const threadDetail = await this._threadRepository.getDetailThread(threadId);
     return threadDetail;
   }
 

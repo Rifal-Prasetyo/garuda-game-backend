@@ -1,3 +1,4 @@
+const AuthorizationError = require('../../Commons/exceptions/AuthorizationError');
 const CommentRepository = require('../../Domains/comments/CommentRepository');
 const AddedCommentToThread = require('../../Domains/comments/entities/AddedCommentToThread');
 const AddedReplyComment = require('../../Domains/comments/entities/AddedReplyComment');
@@ -21,12 +22,23 @@ class CommentRepositoryPostgres extends CommentRepository {
     return new AddedCommentToThread({ ...result.rows[0] });
   }
 
-  async deleteCommentToThread(id) {
+  async deleteCommentToThread(commentId) {
     const query = {
       text: 'DELETE FROM comments WHERE id = $1',
-      values: [id],
+      values: [commentId],
     };
     await this._pool.query(query);
+  }
+
+  async verifyCommentOwner(userId, commentId) {
+    const query = {
+      text: 'SELECT * FROM comments WHERE owner = $1 AND id = $2',
+      values: [userId, commentId],
+    };
+    const result = await this._pool.query(query);
+    if (!result.rowCount) {
+      throw new AuthorizationError();
+    }
   }
 
   async addReplyComment(replyComment) {

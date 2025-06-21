@@ -20,7 +20,6 @@ class DetailThread {
       throw new Error('DETAIL_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
-    console.log(typeof date);
     if (typeof id !== 'string'
             || typeof title !== 'string'
             || typeof body !== 'string'

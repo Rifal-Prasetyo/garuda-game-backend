@@ -7,7 +7,7 @@
     "start": "node src/app.js",
     "start:dev": "nodemon src/app.js",
     "test": "jest --setupFiles dotenv/config --runInBand",
-    "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config",
+    "test:watch": "jest --watchAll --runInBand --coverage --setupFiles dotenv/config",
     "migrate": "node-pg-migrate",
     "migrate:test": "node-pg-migrate -f config/database/test.json"
   },
@@ -17,6 +17,7 @@
   "type": "commonjs",
   "dependencies": {
     "@hapi/hapi": "^21.4.0",
+    "@hapi/inert": "^7.1.0",
     "@hapi/jwt": "^3.2.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.5.0",
