@@ -3,13 +3,13 @@ class DetailThread {
   constructor(payload) {
     this._verifyPayload(payload);
     const {
-      id, title, body, date, owner, comments,
+      id, title, body, date, username, comments,
     } = payload;
     this.id = id;
     this.title = title;
     this.body = body;
     this.date = date;
-    this.owner = owner;
+    this.username = username;
     this._manipulateComments(comments);
   }
 
@@ -17,23 +17,29 @@ class DetailThread {
     this.comments = comments.map((comment) => {
       const replies = comment.replies.map((reply) => {
         if (reply.is_delete) {
-          return { ...reply, content: '**Balasan telah dihapus**' };
+          return {
+            ...reply, content: '**balasan telah dihapus**', commentId: undefined, is_delete: undefined,
+          };
         }
         return reply;
       });
 
       if (comment.is_delete) {
-        return { ...comment, content: '**Komentar telah dihapus**', replies };
+        return {
+          ...comment, content: '**komentar telah dihapus**', replies, commentId: undefined, is_delete: undefined,
+        };
       }
-      return { ...comment, replies };
+      return {
+        ...comment, replies, commentId: undefined, is_delete: undefined,
+      };
     });
   }
 
   _verifyPayload(payload) {
     const {
-      id, title, body, date, owner, comments,
+      id, title, body, date, username, comments,
     } = payload;
-    if (!id || !title || !body || !date || !owner) {
+    if (!id || !title || !body || !date || !username) {
       throw new Error('DETAIL_THREAD.NOT_CONTAIN_NEEDED_PROPERTY');
     }
 
@@ -41,7 +47,7 @@ class DetailThread {
             || typeof title !== 'string'
             || typeof body !== 'string'
             || typeof date !== 'object'
-            || typeof owner !== 'string'
+            || typeof username !== 'string'
             || !Array.isArray(comments)
     ) {
       throw new Error('DETAIL_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');

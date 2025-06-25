@@ -118,6 +118,20 @@ describe('CommentRepositoryPostgres', () => {
       const comment = await CommentTableTestHelper.findCommentById(commentId);
       expect(comment).toHaveLength(1);
     });
+    it('should throw error when not found comment', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadTableTestHelper.createThread({ id: 'thread-blbalbal' });
+      await CommentTableTestHelper.addCommentToThread({ id: 'comment-123' });
+      const commentId = 'comment-not-found';
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
+
+      // action & Assert
+      await expect(commentRepositoryPostgres.getCommentById(commentId))
+        .rejects.toThrow(NotFoundError);
+      const comment = await CommentTableTestHelper.findCommentById(commentId);
+      expect(comment).toHaveLength(0);
+    });
   });
   describe('verifyCommentOwner function', () => {
     it('should not throw error if has comment with correct owner', async () => {

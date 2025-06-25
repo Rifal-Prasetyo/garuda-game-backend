@@ -50,7 +50,7 @@ describe('DeleteReplyCommentUseCase', () => {
       .rejects.toThrow(NotFoundError);
 
     // Assert
-    expect(mockCommentRepository.getCommentById).toHaveBeenCalledWith(useCasePayload.commentId);
+    expect(mockCommentRepository.getCommentById).toHaveBeenCalledWith(useCasePayload.replyId);
   });
   it('should throw error when delete comment by another owner', async () => {
     const useCasePayload = {

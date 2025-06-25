@@ -17,11 +17,11 @@ describe('DetailThread entity', () => {
       title: true,
       body: true,
       date: true,
-      owner: true,
+      username: true,
       comments: [
         {
           id: true,
-          owner: true,
+          username: true,
           date: true,
           content: true,
         },
@@ -38,19 +38,27 @@ describe('DetailThread entity', () => {
       title: 'AI sangat mengerikan, bagaimana cara bertahan hidup',
       body: 'Sekarang hampir semua aspek menggunakan kecerdasan buatan, sangat menegerikan',
       date: new Date('2021-08-08T07:19:09.775Z'),
-      owner: 'dicoding',
+      username: 'dicoding',
       comments: [
         {
           id: 'comment-_pby2_tmXV6bcvcdev8xk',
-          owner: 'johndoe',
+          username: 'johndoe',
           date: new Date('2021-08-08T07:22:33.555Z'),
           content: 'sebuah comment',
           is_delete: false,
-          replies: [],
+          replies: [
+            {
+              id: 'reply-ksdfsdff',
+              username: 'miaw',
+              date: new Date('2021-08-08T07:22:33.555Z'),
+              content: '**balasan telah dihapus',
+              is_delete: true,
+            },
+          ],
         },
         {
           id: 'comment-deleted',
-          owner: 'johndoe',
+          username: 'johndoe',
           date: new Date('2021-08-08T07:22:33.555Z'),
           content: 'sebuah comment',
           is_delete: true,

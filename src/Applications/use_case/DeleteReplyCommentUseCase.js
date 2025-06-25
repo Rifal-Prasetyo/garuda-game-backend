@@ -6,8 +6,8 @@ class DeleteReplyCommentUseCase {
   async execute(payload) {
     this._verifyPayload(payload);
     const { commentId, owner, replyId } = payload;
-    await this._commentRepository.getCommentById(commentId);
-    await this._commentRepository.verifyCommentOwner(owner, commentId);
+    await this._commentRepository.getCommentById(replyId);
+    await this._commentRepository.verifyCommentOwner(owner, replyId);
     await this._commentRepository.deleteReplyComment({ id: replyId, commentId });
   }
 

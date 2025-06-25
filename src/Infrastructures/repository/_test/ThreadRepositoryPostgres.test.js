@@ -5,6 +5,7 @@ const InvariantError = require('../../../Commons/exceptions/InvariantError');
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
 const pool = require('../../database/postgres/pool');
 const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres');
+const CommentTableTestHelper = require('../../../../tests/CommentTableTestHelper');
 
 describe('ThreadRepository postgres', () => {
   afterEach(async () => {
@@ -46,9 +47,12 @@ describe('ThreadRepository postgres', () => {
       // Arrange
       await UsersTableTestHelper.addUser({ id: 'user-123' });
       await ThreadTableTestHelper.createThread({ id: 'thread-blbalabla' });
+      await CommentTableTestHelper.addCommentToThread({ id: 'comment-123', threadId: 'thread-blbalabla' });
+      await CommentTableTestHelper.addCommentToThread({ id: 'comment-124', threadId: 'thread-blbalabla' });
+      await CommentTableTestHelper.addReplyToThread({ id: 'reply-123', threadId: 'thread-blbalabla', commentId: 'comment-123' });
+      await CommentTableTestHelper.addReplyToThread({ id: 'reply-124', threadId: 'thread-blbalabla', commentId: 'comment-123' });
       const idThread = 'thread-blbalabla';
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, nanoid);
-
       // Action & Assert
       await expect(threadRepositoryPostgres.getDetailThread(idThread)).resolves.not
         .toThrow(NotFoundError);

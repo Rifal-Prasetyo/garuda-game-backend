@@ -23,19 +23,17 @@ describe('GetDetailThreadUseCase', () => {
       title: 'sebuah thread',
       body: 'sebuah body thread',
       date: new Date('2021-08-08T07:19:09.775Z'),
-      owner: 'dicoding',
+      username: 'dicoding',
       comments: [
         {
           id: 'comment-_pby2_tmXV6bcvcdev8xk',
           username: 'johndoe',
-          commentId: undefined,
           date: new Date('2021-08-08T07:22:33.555Z'),
           content: 'sebuah comment',
           replies: [
             {
               id: 'reply-_pby2_tmXV6bcvcdev8xk',
               username: 'johndoe',
-              commentId: 'comment-_pby2_tmXV6bcvcdev8xk',
               date: new Date('2021-08-08T07:22:33.555Z'),
               content: 'sebuah comment',
             },
