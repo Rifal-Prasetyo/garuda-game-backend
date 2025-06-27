@@ -5,6 +5,7 @@ const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
 const pool = require('../../database/postgres/pool');
 const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres');
 const CommentTableTestHelper = require('../../../../tests/CommentTableTestHelper');
+const CreatedThread = require('../../../Domains/threads/entities/CreatedThread');
 
 describe('ThreadRepository postgres', () => {
   afterEach(async () => {
@@ -25,12 +26,19 @@ describe('ThreadRepository postgres', () => {
         body: 'isi body dari thread',
         owner: 'user-122',
       };
+      const fakeIdGenerator = () => '1234';
+      const createdThread = new CreatedThread({
+        id: `thread-${fakeIdGenerator()}`,
+        title: createThreadPayload.title,
+        owner: createThreadPayload.owner,
+      });
 
-      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, nanoid);
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, fakeIdGenerator);
 
       // Action & Assert
-      await expect(threadRepositoryPostgres.createThread(createThreadPayload)).resolves.not
-        .toThrow();
+      const threadRepositoryPostgresResult = await threadRepositoryPostgres
+        .createThread(createThreadPayload);
+      expect(threadRepositoryPostgresResult).toStrictEqual(createdThread);
     });
   });
   describe('getDetailThread function', () => {
@@ -53,9 +61,12 @@ describe('ThreadRepository postgres', () => {
       await CommentTableTestHelper.addReplyToThread({ id: 'reply-124', threadId: 'thread-blbalabla', commentId: 'comment-123' });
       const idThread = 'thread-blbalabla';
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, nanoid);
+
       // Action & Assert
       await expect(threadRepositoryPostgres.getDetailThread(idThread)).resolves.not
         .toThrow(NotFoundError);
+      const thread = await ThreadTableTestHelper.getThreadById('thread-blbalabla');
+      expect(thread).toHaveLength(1);
     });
   });
 });

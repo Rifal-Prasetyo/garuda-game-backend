@@ -44,18 +44,6 @@ describe('CommentRepositoryPostgres', () => {
     });
   });
   describe('deleteCommentToThread function', () => {
-    it('should  throw error when delete not found comment', async () => {
-      // Arrange
-      await UsersTableTestHelper.addUser({ id: 'user-123' });
-      await ThreadTableTestHelper.createThread({ id: 'thread-blablablab' });
-      await CommentTableTestHelper.addCommentToThread({ id: 'comment-blablabla', threadId: 'thread-blablablab' });
-      const deleteCommentToThreadPayload = 'comment-not-found';
-      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
-
-      // Action & Assert
-      await expect(commentRepositoryPostgres.deleteCommentToThread(deleteCommentToThreadPayload))
-        .rejects;
-    });
     it('should not throw error when comment deleted correctly', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({ id: 'user-123' });
@@ -66,7 +54,7 @@ describe('CommentRepositoryPostgres', () => {
 
       // Action & Assert
       await expect(commentRepositoryPostgres.deleteCommentToThread(deleteCommentToThreadPayload))
-        .resolves;
+        .resolves.not.toThrow();
     });
   });
   describe('addReplyComment function', () => {

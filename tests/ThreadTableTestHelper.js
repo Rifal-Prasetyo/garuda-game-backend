@@ -14,6 +14,14 @@ const ThreadTableTestHelper = {
   async cleanTable() {
     await pool.query('DELETE FROM threads WHERE 1=1');
   },
+  async getThreadById(id) {
+    const query = {
+      text: 'SELECT * FROM threads WHERE id = $1',
+      values: [id],
+    };
+    const result = await pool.query(query);
+    return result.rows;
+  },
 };
 
 module.exports = ThreadTableTestHelper;
