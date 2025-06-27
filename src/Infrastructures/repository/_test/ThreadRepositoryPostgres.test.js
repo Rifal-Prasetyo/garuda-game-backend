@@ -1,4 +1,3 @@
-const { nanoid } = require('nanoid');
 const ThreadTableTestHelper = require('../../../../tests/ThreadTableTestHelper');
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
@@ -45,7 +44,7 @@ describe('ThreadRepository postgres', () => {
     it('should throw error when thread not found', async () => {
       // Arrange
       const idThread = 'thread-opiouiyugvbnlkiouygh';
-      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, nanoid);
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
 
       // Action & Assert
       await expect(threadRepositoryPostgres.getDetailThread(idThread)).rejects
@@ -60,7 +59,7 @@ describe('ThreadRepository postgres', () => {
       await CommentTableTestHelper.addReplyToThread({ id: 'reply-123', threadId: 'thread-blbalabla', commentId: 'comment-123' });
       await CommentTableTestHelper.addReplyToThread({ id: 'reply-124', threadId: 'thread-blbalabla', commentId: 'comment-123' });
       const idThread = 'thread-blbalabla';
-      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, nanoid);
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
 
       // Action & Assert
       await expect(threadRepositoryPostgres.getDetailThread(idThread)).resolves.not
