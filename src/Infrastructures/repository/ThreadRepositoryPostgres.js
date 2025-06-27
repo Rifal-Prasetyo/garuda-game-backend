@@ -43,23 +43,8 @@ class ThreadRepositoryPostgres extends ThreadRepository {
       `,
       values: [id],
     };
-    const commentResult = await this._pool.query(commentQuery);
-    const comments = [];
-    const repliesMap = {};
-    commentResult.rows.forEach((row) => {
-      if (!row.commentId) {
-        comments.push({ ...row, replies: [] });
-      } else {
-        if (!repliesMap[row.commentId]) repliesMap[row.commentId] = [];
-        repliesMap[row.commentId].push(row);
-      }
-    });
-    comments.forEach((comment) => {
-      // eslint-disable-next-line no-param-reassign
-      comment.replies = repliesMap[comment.id] || [];
-    });
-
-    return new DetailThread({ ...thread, comments });
+    const comments = await this._pool.query(commentQuery);
+    return new DetailThread({ ...thread, comments: comments.rows });
   }
 }
 

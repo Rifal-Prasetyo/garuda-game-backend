@@ -46,15 +46,14 @@ describe('DetailThread entity', () => {
           date: new Date('2021-08-08T07:22:33.555Z'),
           content: 'sebuah comment',
           is_delete: false,
-          replies: [
-            {
-              id: 'reply-ksdfsdff',
-              username: 'miaw',
-              date: new Date('2021-08-08T07:22:33.555Z'),
-              content: '**balasan telah dihapus',
-              is_delete: true,
-            },
-          ],
+        },
+        {
+          id: 'reply-ksdfsdff',
+          username: 'miaw',
+          date: new Date('2021-08-08T07:22:33.555Z'),
+          content: 'balasan yang akan dihapus',
+          commentId: 'comment-_pby2_tmXV6bcvcdev8xk',
+          is_delete: true,
         },
         {
           id: 'comment-deleted',

@@ -14,23 +14,31 @@ class DetailThread {
   }
 
   _manipulateComments(comments) {
-    this.comments = comments.map((comment) => {
-      const replies = comment.replies.map((reply) => {
-        if (reply.is_delete) {
-          return {
-            ...reply, content: '**balasan telah dihapus**', commentId: undefined, is_delete: undefined,
-          };
-        }
-        return reply;
-      });
+    const commentsData = [];
+    const repliesMap = {};
 
-      if (comment.is_delete) {
-        return {
-          ...comment, content: '**komentar telah dihapus**', replies, commentId: undefined, is_delete: undefined,
-        };
+    comments.forEach((row) => {
+      if (!row.commentId) {
+        commentsData.push({ ...row, replies: [] });
+      } else {
+        (repliesMap[row.commentId] = repliesMap[row.commentId] || []).push(row);
       }
+    });
+
+    this.comments = commentsData.map((comment) => {
+      const replies = (repliesMap[comment.id] || []).map((reply) => ({
+        ...reply,
+        content: reply.is_delete ? '**balasan telah dihapus**' : reply.content,
+        commentId: undefined,
+        is_delete: undefined,
+      }));
+
       return {
-        ...comment, replies, commentId: undefined, is_delete: undefined,
+        ...comment,
+        content: comment.is_delete ? '**komentar telah dihapus**' : comment.content,
+        replies,
+        commentId: undefined,
+        is_delete: undefined,
       };
     });
   }

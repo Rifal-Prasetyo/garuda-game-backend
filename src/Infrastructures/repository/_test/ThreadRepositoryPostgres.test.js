@@ -1,7 +1,6 @@
 const { nanoid } = require('nanoid');
 const ThreadTableTestHelper = require('../../../../tests/ThreadTableTestHelper');
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
-const InvariantError = require('../../../Commons/exceptions/InvariantError');
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
 const pool = require('../../database/postgres/pool');
 const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres');
@@ -11,6 +10,7 @@ describe('ThreadRepository postgres', () => {
   afterEach(async () => {
     await UsersTableTestHelper.cleanTable();
     await ThreadTableTestHelper.cleanTable();
+    await CommentTableTestHelper.cleanTable();
   });
   afterAll(async () => {
     await pool.end();
@@ -30,7 +30,7 @@ describe('ThreadRepository postgres', () => {
 
       // Action & Assert
       await expect(threadRepositoryPostgres.createThread(createThreadPayload)).resolves.not
-        .toThrow(InvariantError);
+        .toThrow();
     });
   });
   describe('getDetailThread function', () => {
