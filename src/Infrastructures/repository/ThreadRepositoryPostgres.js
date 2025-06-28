@@ -29,9 +29,6 @@ class ThreadRepositoryPostgres extends ThreadRepository {
       values: [id],
     };
     const threadResult = await this._pool.query(threadQuery);
-    if (!threadResult.rowCount) {
-      throw new NotFoundError();
-    }
     const thread = threadResult.rows[0];
     const commentQuery = {
       text: `
@@ -45,6 +42,17 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     };
     const comments = await this._pool.query(commentQuery);
     return new DetailThread({ ...thread, comments: comments.rows });
+  }
+
+  async verifyThreadAvailibility(id) {
+    const query = {
+      text: 'SELECT * FROM threads WHERE id = $1',
+      values: [id],
+    };
+    const result = await this._pool.query(query);
+    if (!result.rowCount) {
+      throw new NotFoundError();
+    }
   }
 }
 

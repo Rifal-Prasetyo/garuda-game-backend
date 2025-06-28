@@ -63,7 +63,10 @@ describe('DeleteCommentAtThreadUseCase', () => {
       .rejects.toThrow(AuthorizationError);
 
     // Assert
-    expect(mockCommentRepository.verifyCommentOwner).toHaveBeenCalled();
+    expect(mockCommentRepository.getCommentById)
+      .toHaveBeenCalledWith(useCasePayload.commentId);
+    expect(mockCommentRepository.verifyCommentOwner)
+      .toHaveBeenCalledWith(useCasePayload.owner, useCasePayload.commentId);
   });
   it('should orchestrating delete comment at thread use case correctly', async () => {
     const useCasePayload = {
@@ -95,7 +98,10 @@ describe('DeleteCommentAtThreadUseCase', () => {
       .execute(useCasePayload);
 
     // Assert
-    expect(mockCommentRepository.verifyCommentOwner).toHaveBeenCalled();
+    expect(mockCommentRepository.getCommentById)
+      .toHaveBeenCalledWith(useCasePayload.commentId);
+    expect(mockCommentRepository.verifyCommentOwner)
+      .toHaveBeenCalledWith(useCasePayload.owner, useCasePayload.commentId);
     expect(mockCommentRepository.deleteCommentToThread).toHaveBeenCalled();
   });
 });

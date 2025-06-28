@@ -77,7 +77,9 @@ describe('DeleteReplyCommentUseCase', () => {
       .rejects.toThrow(AuthorizationError);
 
     // Assert
-    expect(mockCommentRepository.verifyCommentOwner).toHaveBeenCalled();
+    expect(mockCommentRepository.getCommentById).toHaveBeenCalledWith(useCasePayload.replyId);
+    expect(mockCommentRepository.verifyCommentOwner)
+      .toHaveBeenCalledWith(useCasePayload.owner, useCasePayload.replyId);
   });
   it('should orchestrating delete reply comment use case correctly', async () => {
     // Arrange
@@ -107,6 +109,10 @@ describe('DeleteReplyCommentUseCase', () => {
     await deleteReplyCommentUseCase.execute(useCasePayload);
 
     // Assert
-    expect(mockCommentRepository.deleteReplyComment).toHaveBeenCalled();
+    expect(mockCommentRepository.getCommentById).toHaveBeenCalledWith(useCasePayload.replyId);
+    expect(mockCommentRepository.verifyCommentOwner)
+      .toHaveBeenCalledWith(useCasePayload.owner, useCasePayload.replyId);
+    expect(mockCommentRepository.deleteReplyComment)
+      .toHaveBeenCalledWith({ id: useCasePayload.replyId, commentId: useCasePayload.commentId });
   });
 });

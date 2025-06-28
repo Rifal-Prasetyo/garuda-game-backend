@@ -42,7 +42,7 @@ describe('AddCommentToThreadUseCase', () => {
     const mockAddedCommentToThread = new AddedCommentToThread({ id: 'comment-fisjfskf', content: useCasePayload.data.content, owner: 'user-122' });
 
     // mocking needed function
-    mockThreadRepository.getDetailThread = jest.fn()
+    mockThreadRepository.verifyThreadAvailibility = jest.fn()
       .mockImplementation(() => Promise.reject(new NotFoundError()));
     mockCommentRepository.addCommentToThread = jest.fn()
       .mockImplementation(() => Promise.resolve(mockAddedCommentToThread));
@@ -55,7 +55,8 @@ describe('AddCommentToThreadUseCase', () => {
 
     // Action & Assert
     await expect(addCommentToThreadUseCase.execute(useCasePayload)).rejects.toThrow(NotFoundError);
-    expect(mockThreadRepository.getDetailThread).toHaveBeenCalledWith(useCasePayload.threadId);
+    expect(mockThreadRepository.verifyThreadAvailibility)
+      .toHaveBeenCalledWith(useCasePayload.threadId);
   });
   it('should throw error when not contain needed property in data', async () => {
     // Arrange
@@ -85,7 +86,7 @@ describe('AddCommentToThreadUseCase', () => {
     const mockAddedCommentToThread = new AddedCommentToThread({ id: 'comment-fisjfskf', content: useCasePayload.data.content, owner: 'user-122' });
 
     // mocking needed function
-    mockThreadRepository.getDetailThread = jest.fn()
+    mockThreadRepository.verifyThreadAvailibility = jest.fn()
       .mockImplementation(() => Promise.resolve());
     mockCommentRepository.addCommentToThread = jest.fn()
       .mockImplementation(() => Promise.resolve(mockAddedCommentToThread));
@@ -105,6 +106,7 @@ describe('AddCommentToThreadUseCase', () => {
       content: useCasePayload.data.content,
       owner: 'user-122',
     }));
+    expect(mockThreadRepository.verifyThreadAvailibility(useCasePayload.threadId));
     expect(mockCommentRepository.addCommentToThread).toHaveBeenCalledWith({ ...useCasePayload.data, owner: 'user-122', threadId: useCasePayload.threadId });
   });
 });

@@ -8,7 +8,7 @@ class AddCommentToThreadUseCase {
     this._valdiatePayload(payload);
     const { credentialId: owner, threadId } = payload;
     const { content } = payload.data;
-    await this._threadRepository.getDetailThread(threadId);
+    await this._threadRepository.verifyThreadAvailibility(threadId);
     const addCommentToThread = await this._commentRepository
       .addCommentToThread({ owner, threadId, content });
     return addCommentToThread;

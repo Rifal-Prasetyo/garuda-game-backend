@@ -32,6 +32,6 @@ describe('DeleteThreadUseCase', () => {
     await deleteThreadUseCase.execute(useCasePayload);
 
     // Assert
-    expect(mockThreadRepository.deleteThread).toHaveBeenCalled();
+    expect(mockThreadRepository.deleteThread).toHaveBeenCalledWith(useCasePayload.threadId);
   });
 });

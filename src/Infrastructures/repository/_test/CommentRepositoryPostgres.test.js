@@ -55,6 +55,8 @@ describe('CommentRepositoryPostgres', () => {
       // Action & Assert
       await expect(commentRepositoryPostgres.deleteCommentToThread(deleteCommentToThreadPayload))
         .resolves.not.toThrow();
+      const deletedComment = await CommentTableTestHelper.findCommentById('comment-blablabla');
+      expect(deletedComment[0].is_delete).toEqual(true);
     });
   });
   describe('addReplyComment function', () => {

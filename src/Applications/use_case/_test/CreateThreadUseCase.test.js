@@ -34,6 +34,7 @@ describe('CreateThreadUseCase', () => {
         body: 'bagaimana cara menjadi pria sigma fanum tax level 99',
       },
     };
+
     //  creating dependency of use case
     const mockThreadRepository = new ThreadRepository();
     const mockRegisteredUser = new CreatedThread({ id: 'thread-blabalbalbak', title: useCasePayload.data.title, owner: 'user-122' });
