@@ -107,7 +107,7 @@ describe('AddReplyCommentUseCase', () => {
     mockThreadRepository.verifyThreadAvailibility = jest.fn()
       .mockImplementation(() => Promise.resolve());
     mockCommentRepository.getCommentById = jest.fn()
-      .mockImplementation(() => Promise.resolve(mockAddedReplyComment));
+      .mockImplementation(() => Promise.resolve());
     mockCommentRepository.addReplyComment = jest.fn()
       .mockImplementation(() => Promise.resolve(mockAddedReplyComment));
 
