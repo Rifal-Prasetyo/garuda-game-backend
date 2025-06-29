@@ -122,5 +122,16 @@ describe('ThreadRepository postgres', () => {
       await expect(threadRepositoryPostgres.verifyThreadAvailibility(idThread)).rejects
         .toThrow(NotFoundError);
     });
+    it('should not throw error when thread found', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-1234' });
+      await ThreadTableTestHelper.createThread({ id: 'thread-1234', owner: 'user-1234' });
+      const idThread = 'thread-1234';
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
+
+      // Action & Assert
+      await expect(threadRepositoryPostgres.verifyThreadAvailibility(idThread)).resolves.not
+        .toThrow(NotFoundError);
+    });
   });
 });

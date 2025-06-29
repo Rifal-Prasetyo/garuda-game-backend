@@ -98,7 +98,15 @@ describe('AddReplyCommentUseCase', () => {
       content: 'mencoba membalas komentar',
       owner: 'user-ksdjfksndf',
     });
-
+    const mockGetCommentById = {
+      id: 'comment-comment-ksjfndfs',
+      content: 'test comment',
+      owner: 'user-ksdjfksnd',
+      date: new Date().setTime(1751173932000),
+      commentId: null,
+      threadId: 'thread-blablabal',
+      is_delete: null,
+    };
     //   creating dependency of use case
     const mockCommentRepository = new CommentRepository();
     const mockThreadRepository = new ThreadRepository();
@@ -107,7 +115,7 @@ describe('AddReplyCommentUseCase', () => {
     mockThreadRepository.verifyThreadAvailibility = jest.fn()
       .mockImplementation(() => Promise.resolve());
     mockCommentRepository.getCommentById = jest.fn()
-      .mockImplementation(() => Promise.resolve());
+      .mockImplementation(() => Promise.resolve(mockGetCommentById));
     mockCommentRepository.addReplyComment = jest.fn()
       .mockImplementation(() => Promise.resolve(mockAddedReplyComment));
 
