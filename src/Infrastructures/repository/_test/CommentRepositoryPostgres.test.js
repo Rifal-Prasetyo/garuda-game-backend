@@ -95,7 +95,7 @@ describe('CommentRepositoryPostgres', () => {
       await UsersTableTestHelper.addUser({ id: 'user-123' });
       await ThreadTableTestHelper.createThread({ id: 'thread-321' });
       await CommentTableTestHelper.addCommentToThread({ id: 'comment-321', threadId: 'thread-321' });
-      await CommentTableTestHelper.addCommentToThread({ id: 'reply-321', threadId: 'thread-321', commentId: 'comment-321' });
+      await CommentTableTestHelper.addReplyToThread({ id: 'reply-321', threadId: 'thread-321', commentId: 'comment-321' });
       const deleteReplyCommentPayload = {
         threadId: 'thread-321',
         commentId: 'comment-321',
@@ -104,15 +104,15 @@ describe('CommentRepositoryPostgres', () => {
       };
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 
-      // Action & Assert
-      await expect(commentRepositoryPostgres
-        .deleteReplyComment({
-          id: deleteReplyCommentPayload.threadId, commentId: deleteReplyCommentPayload.replyId,
-        }))
-        .resolves;
+      // Action
+      await commentRepositoryPostgres.deleteReplyComment({
+        id: deleteReplyCommentPayload.replyId, commentId: deleteReplyCommentPayload.commentId,
+      });
+
+      //  Assert
       const replyComment = await CommentTableTestHelper
         .findCommentById(deleteReplyCommentPayload.replyId);
-      expect(replyComment).not.toBeNull();
+      expect(replyComment[0].is_delete).toBe(true);
     });
   });
   describe('getCommentById function', () => {

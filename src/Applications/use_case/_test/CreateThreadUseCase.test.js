@@ -11,6 +11,17 @@ describe('CreateThreadUseCase', () => {
     // Action & Assert
     await expect(createThreadUseCase.execute(useCasePayload)).rejects.toThrow('CREATE_THREAD_USE_CASE.NOT_CONTAIN_NEEDED_PROPERTY');
   });
+  it('should throw error if use case payload data not contain needed property', async () => {
+    // Arrange
+    const useCasePayload = {
+      credentialId: 'user-122',
+      data: {},
+    };
+    const createThreadUseCase = new CreateThreadUseCase({});
+
+    // Action & Assert
+    await expect(createThreadUseCase.execute(useCasePayload)).rejects.toThrow('CREATE_THREAD_USE_CASE.NOT_CONTAIN_NEEDED_PROPERTY');
+  });
   it('should throw error if data not meet data spesification', async () => {
     // Arrange
     const useCasePayload = {

@@ -31,90 +31,129 @@ describe('DetailThread entity', () => {
     // Action & Assert
     expect(() => new DetailThread(payload)).toThrow('DETAIL_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
-  it('should detail thread entities correctly', () => {
+  it('should create DetailThread with correct property types', () => {
     // Arrange
     const payload = {
-      id: 'thread-h_2FkLZhtgBKY2kh4CC02',
-      title: 'AI sangat mengerikan, bagaimana cara bertahan hidup',
-      body: 'Sekarang hampir semua aspek menggunakan kecerdasan buatan, sangat menegerikan',
-      date: new Date('2021-08-08T07:19:09.775Z'),
-      username: 'dicoding',
+      id: 'thread-123',
+      title: 'Judul Thread',
+      body: 'Isi thread',
+      date: new Date('2022-01-01T00:00:00.000Z'),
+      username: 'user1',
       comments: [
         {
-          id: 'comment-_pby2_tmXV6bcvcdev8xk',
-          username: 'johndoe',
-          date: new Date('2021-08-08T07:22:33.555Z'),
-          content: 'sebuah comment',
+          id: 'comment-1',
+          username: 'user2',
+          date: new Date('2022-01-01T01:00:00.000Z'),
+          content: 'Komentar pertama',
           is_delete: false,
         },
         {
-          id: 'reply-ksdfsdff',
-          username: 'miaw',
-          date: new Date('2021-08-08T07:22:33.555Z'),
-          content: 'balasan yang akan dihapus',
-          commentId: 'comment-_pby2_tmXV6bcvcdev8xk',
-          is_delete: true,
-        },
-        {
-          id: 'comment-deleted',
-          username: 'johndoe',
-          date: new Date('2021-08-08T07:22:33.555Z'),
-          content: 'sebuah comment',
-          is_delete: true,
-          replies: [],
+          id: 'reply-1',
+          username: 'user3',
+          date: new Date('2022-01-01T01:10:00.000Z'),
+          content: 'Balasan',
+          commentId: 'comment-1',
+          is_delete: false,
         },
       ],
     };
 
     // Action
-    const detailThead = new DetailThread(payload);
+    const detailThread = new DetailThread(payload);
+
     // Assert
-    expect(detailThead).toBeInstanceOf(DetailThread);
-    expect(detailThead).toStrictEqual(new DetailThread({
-      id: 'thread-h_2FkLZhtgBKY2kh4CC02',
-      title: 'AI sangat mengerikan, bagaimana cara bertahan hidup',
-      body: 'Sekarang hampir semua aspek menggunakan kecerdasan buatan, sangat menegerikan',
-      date: new Date('2021-08-08T07:19:09.775Z'),
-      username: 'dicoding',
+    expect(detailThread.id).toBe(payload.id);
+    expect(typeof detailThread.id).toBe('string');
+    expect(detailThread.title).toBe(payload.title);
+    expect(typeof detailThread.title).toBe('string');
+    expect(detailThread.body).toBe(payload.body);
+    expect(typeof detailThread.body).toBe('string');
+    expect(detailThread.date).toBeInstanceOf(Date);
+    expect(detailThread.username).toBe(payload.username);
+    expect(typeof detailThread.username).toBe('string');
+    expect(Array.isArray(detailThread.comments)).toBe(true);
+    expect(detailThread.comments.length).toBe(1);
+    const comment = detailThread.comments[0];
+    expect(comment.id).toBe('comment-1');
+    expect(typeof comment.id).toBe('string');
+    expect(comment.username).toBe('user2');
+    expect(typeof comment.username).toBe('string');
+    expect(comment.date).toBeInstanceOf(Date);
+    expect(comment.content).toBe('Komentar pertama');
+    expect(typeof comment.content).toBe('string');
+    expect(Array.isArray(comment.replies)).toBe(true);
+    expect(comment.replies.length).toBe(1);
+    const reply = comment.replies[0];
+    expect(reply.id).toBe('reply-1');
+    expect(typeof reply.id).toBe('string');
+    expect(reply.username).toBe('user3');
+    expect(typeof reply.username).toBe('string');
+    expect(reply.date).toBeInstanceOf(Date);
+    expect(reply.content).toBe('Balasan');
+    expect(typeof reply.content).toBe('string');
+    expect(reply.commentId).toBeUndefined();
+    expect(reply.is_delete).toBeUndefined();
+  });
+
+  it('should replace deleted comment and reply content with proper message', () => {
+    // Arrange
+    const payload = {
+      id: 'thread-456',
+      title: 'Thread Dihapus',
+      body: 'Isi thread dihapus',
+      date: new Date('2022-02-02T00:00:00.000Z'),
+      username: 'user4',
       comments: [
         {
-          id: 'comment-_pby2_tmXV6bcvcdev8xk',
-          username: 'johndoe',
-          date: new Date('2021-08-08T07:22:33.555Z'),
-          content: 'sebuah comment',
-          is_delete: false,
-        },
-        {
-          id: 'reply-ksdfsdff',
-          username: 'miaw',
-          date: new Date('2021-08-08T07:22:33.555Z'),
-          content: 'balasan yang akan dihapus',
-          commentId: 'comment-_pby2_tmXV6bcvcdev8xk',
+          id: 'comment-del',
+          username: 'user5',
+          date: new Date('2022-02-02T01:00:00.000Z'),
+          content: 'Komentar yang dihapus',
           is_delete: true,
         },
         {
-          id: 'comment-deleted',
-          username: 'johndoe',
-          date: new Date('2021-08-08T07:22:33.555Z'),
-          content: 'sebuah comment',
+          id: 'reply-del',
+          username: 'user6',
+          date: new Date('2022-02-02T01:10:00.000Z'),
+          content: 'Balasan yang dihapus',
+          commentId: 'comment-del',
           is_delete: true,
-          replies: [],
         },
       ],
-    }));
-    expect(detailThead.id).toEqual(payload.id);
-    expect(detailThead.title).toEqual(payload.title);
-    expect(detailThead.body).toEqual(payload.body);
-    expect(detailThead.date).toEqual(payload.date);
-    expect(detailThead.owner).toEqual(payload.owner);
-    expect(detailThead.title).toEqual(payload.title);
-    expect(detailThead.comments).toBeDefined();
-    expect(detailThead.comments[0].replies[0].id).toEqual(payload.comments[1].id);
-    expect(detailThead.comments[0].replies[0].username)
-      .toEqual(payload.comments[1].username);
-    expect(detailThead.comments[1].date)
-      .toEqual(payload.comments[1].date);
-    expect(detailThead.comments[1].content)
-      .toEqual('**komentar telah dihapus**');
+    };
+
+    // Action
+    const detailThread = new DetailThread(payload);
+
+    // Assert
+    expect(detailThread.comments.length).toBe(1);
+    const comment = detailThread.comments[0];
+    expect(comment.content).toBe('**komentar telah dihapus**');
+    expect(comment.is_delete).toBeUndefined();
+    expect(Array.isArray(comment.replies)).toBe(true);
+    expect(comment.replies.length).toBe(1);
+
+    const reply = comment.replies[0];
+    expect(reply.content).toBe('**balasan telah dihapus**');
+    expect(reply.is_delete).toBeUndefined();
+  });
+
+  it('should handle empty comments array', () => {
+    // Arrange
+    const payload = {
+      id: 'thread-789',
+      title: 'Thread Kosong',
+      body: 'Tidak ada komentar',
+      date: new Date('2022-03-03T00:00:00.000Z'),
+      username: 'user7',
+      comments: [],
+    };
+
+    // Action
+    const detailThread = new DetailThread(payload);
+
+    // Assert
+    expect(detailThread.comments).toEqual([]);
+    expect(Array.isArray(detailThread.comments)).toBe(true);
   });
 });

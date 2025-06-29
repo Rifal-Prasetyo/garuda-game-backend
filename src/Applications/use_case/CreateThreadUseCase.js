@@ -16,7 +16,7 @@ class CreateThreadUseCase {
   }
 
   _validatePayload(payload) {
-    if (!payload.data) {
+    if (!payload.data || !payload.credentialId) {
       throw new Error('CREATE_THREAD_USE_CASE.NOT_CONTAIN_NEEDED_PROPERTY');
     }
     const { title, body } = payload.data;

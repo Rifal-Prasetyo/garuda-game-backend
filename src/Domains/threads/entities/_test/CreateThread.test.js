@@ -34,7 +34,10 @@ describe('CreateThread entities', () => {
     const createThread = new CreateThread(payload);
     // Assert
     expect(createThread).toBeInstanceOf(CreateThread);
+    expect(Object.keys(createThread)).toEqual(['title', 'body']);
     expect(createThread.title).toEqual(payload.title);
+    expect(typeof createThread.title).toBe('string');
     expect(createThread.body).toEqual(payload.body);
+    expect(typeof createThread.body).toBe('string');
   });
 });

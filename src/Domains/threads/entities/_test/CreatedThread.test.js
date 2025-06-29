@@ -32,8 +32,12 @@ describe('CreatedThread entity', () => {
     const createdThread = new CreatedThread(payload);
     // Assert
     expect(createdThread).toBeInstanceOf(CreatedThread);
+    expect(Object.keys(createdThread)).toEqual(['id', 'title', 'owner']);
     expect(createdThread.id).toEqual(payload.id);
+    expect(typeof createdThread.id).toBe('string');
     expect(createdThread.title).toEqual(payload.title);
+    expect(typeof createdThread.title).toBe('string');
     expect(createdThread.owner).toEqual(payload.owner);
+    expect(typeof createdThread.owner).toBe('string');
   });
 });

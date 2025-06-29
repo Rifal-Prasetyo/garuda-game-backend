@@ -1,13 +1,18 @@
 class AddedReplyComment {
   constructor(payload) {
-    this._validatePayload(payload);
-    const { id, content, owner } = payload;
+    this._verifyPayload(payload);
+    const {
+      id, content, owner,
+    } = payload;
     this.id = id;
     this.content = content;
     this.owner = owner;
   }
 
-  _validatePayload({ id, content, owner }) {
+  _verifyPayload(payload) {
+    const {
+      id, content, owner,
+    } = payload;
     if (!id || !content || !owner) {
       throw new Error('ADDED_REPLY_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY');
     }
