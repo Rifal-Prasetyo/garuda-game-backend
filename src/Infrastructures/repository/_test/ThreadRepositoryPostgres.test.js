@@ -39,6 +39,8 @@ describe('ThreadRepository postgres', () => {
       const threadRepositoryPostgresResult = await threadRepositoryPostgres
         .createThread(createThreadPayload);
       expect(threadRepositoryPostgresResult).toStrictEqual(createdThread);
+      const thread = await ThreadTableTestHelper.getThreadById('thread-1234');
+      expect(thread).toHaveLength(1);
     });
   });
   describe('getDetailThread function', () => {
