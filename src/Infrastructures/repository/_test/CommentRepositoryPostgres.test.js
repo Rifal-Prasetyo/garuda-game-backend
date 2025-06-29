@@ -7,6 +7,7 @@ const ThreadTableTestHelper = require('../../../../tests/ThreadTableTestHelper')
 const CommentTableTestHelper = require('../../../../tests/CommentTableTestHelper');
 const AddedCommentToThread = require('../../../Domains/comments/entities/AddedCommentToThread');
 const AuthorizationError = require('../../../Commons/exceptions/AuthorizationError');
+const AddedReplyComment = require('../../../Domains/comments/entities/AddedReplyComment');
 
 describe('CommentRepositoryPostgres', () => {
   afterEach(async () => {
@@ -74,9 +75,16 @@ describe('CommentRepositoryPostgres', () => {
       const fakeIdGenerator = () => 'ljkhygcfvbn';
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
 
-      // Action & Assert
-      await expect(commentRepositoryPostgres.addReplyComment(addReplyCommentPayload))
-        .resolves.not.toThrow();
+      // Action
+      const addedReplyComment = await commentRepositoryPostgres
+        .addReplyComment(addReplyCommentPayload);
+
+      // Assert
+      expect(addedReplyComment).toStrictEqual(new AddedReplyComment({
+        id: 'reply-ljkhygcfvbn',
+        content: 'balasan comment',
+        owner: 'user-iougfhjhkk',
+      }));
       const replyComment = await CommentTableTestHelper.findCommentById('reply-ljkhygcfvbn');
       expect(replyComment).toHaveLength(1);
     });
