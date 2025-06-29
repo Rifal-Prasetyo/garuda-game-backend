@@ -118,14 +118,26 @@ describe('CommentRepositoryPostgres', () => {
   describe('getCommentById function', () => {
     it('should return comment correctly', async () => {
       // Arrange
+      const date = new Date();
       await UsersTableTestHelper.addUser({ id: 'user-123' });
       await ThreadTableTestHelper.createThread({ id: 'thread-blbalbal' });
-      await CommentTableTestHelper.addCommentToThread({ id: 'comment-123' });
+      await CommentTableTestHelper.addCommentToThread({ id: 'comment-123', date });
       const commentId = 'comment-123';
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 
-      // action & Assert
-      await expect(commentRepositoryPostgres.getCommentById(commentId)).resolves.not.toThrow();
+      // action
+      const getCommentById = await commentRepositoryPostgres.getCommentById(commentId);
+
+      //  & Assert
+      expect(getCommentById).toEqual({
+        id: 'comment-123',
+        content: 'test comment',
+        owner: 'user-123',
+        date,
+        commentId: null,
+        threadId: 'thread-blbalbal',
+        is_delete: null,
+      });
       const comment = await CommentTableTestHelper.findCommentById(commentId);
       expect(comment).toHaveLength(1);
     });
