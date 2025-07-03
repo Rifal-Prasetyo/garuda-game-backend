@@ -59,9 +59,11 @@ describe('ThreadRepository postgres', () => {
       await UsersTableTestHelper.addUser({ id: 'user-123' });
       await ThreadTableTestHelper.createThread({ id: 'thread-blbalabla', date: threadDate });
       await CommentTableTestHelper.addCommentToThread({ id: 'comment-123', threadId: 'thread-blbalabla', date: comment1Date });
-      await CommentTableTestHelper.addCommentToThread({ id: 'comment-124', threadId: 'thread-blbalabla', date: commnet2Date });
+      await CommentTableTestHelper.addCommentToThread({
+        id: 'comment-124', threadId: 'thread-blbalabla', date: commnet2Date, isDelete: true,
+      });
       await CommentTableTestHelper.addReplyToThread({
-        id: 'reply-123', threadId: 'thread-blbalabla', commentId: 'comment-123', date: reply1Date,
+        id: 'reply-123', threadId: 'thread-blbalabla', commentId: 'comment-123', date: reply1Date, isDelete: true,
       });
       await CommentTableTestHelper.addReplyToThread({
         id: 'reply-124', threadId: 'thread-blbalabla', commentId: 'comment-123', date: reply2Date,
@@ -85,12 +87,16 @@ describe('ThreadRepository postgres', () => {
             username: 'dicoding',
             date: comment1Date,
             content: 'test comment',
+            commentId: null,
+            is_delete: false,
           },
           {
             id: 'comment-124',
             username: 'dicoding',
             date: commnet2Date,
             content: 'test comment',
+            commentId: null,
+            is_delete: true,
           },
           {
             id: 'reply-123',
@@ -98,6 +104,7 @@ describe('ThreadRepository postgres', () => {
             date: reply1Date,
             content: 'test reply comment',
             commentId: 'comment-123',
+            is_delete: true,
           },
           {
             id: 'reply-124',
@@ -105,6 +112,7 @@ describe('ThreadRepository postgres', () => {
             date: reply2Date,
             content: 'test reply comment',
             commentId: 'comment-123',
+            is_delete: false,
           },
         ],
       }));
