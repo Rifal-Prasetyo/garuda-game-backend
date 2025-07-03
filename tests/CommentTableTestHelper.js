@@ -4,7 +4,7 @@ const pool = require('../src/Infrastructures/database/postgres/pool');
 
 const CommentTableTestHelper = {
   async addCommentToThread({
-    id = 'comment-123', threadId = 'thread-blbalbal', content = 'test comment', owner = 'user-123', date = new Date(), isDelete = false,
+    id = 'comment-123', threadId = 'thread-blbalbal', content = 'test comment', owner = 'user-123', date = new Date(), isDelete = null,
   }) {
     const query = {
       text: `INSERT INTO comments (id, content, owner, "threadId", date, "is_delete") VALUES($1,  $2, $3, $4, $5, $6) `,
@@ -13,7 +13,7 @@ const CommentTableTestHelper = {
     await pool.query(query);
   },
   async addReplyToThread({
-    id = 'reply-123', threadId = 'thread-blbalbal', content = 'test reply comment', owner = 'user-123', commentId = "comment-123", date = new Date(), isDelete = false,
+    id = 'reply-123', threadId = 'thread-blbalbal', content = 'test reply comment', owner = 'user-123', commentId = "comment-123", date = new Date(), isDelete = null,
   }) {
     const query = {
       text: `INSERT INTO comments (id, content, owner, "threadId", "commentId", date, "is_delete") VALUES($1,  $2, $3, $4, $5, $6, $7) `,

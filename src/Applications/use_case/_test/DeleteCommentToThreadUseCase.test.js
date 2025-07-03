@@ -32,11 +32,9 @@ describe('DeleteCommentAtThreadUseCase', () => {
       commentRepository: mockCommentRepository,
     });
 
-    // Action
+    // Action & Assert
     await expect(deleteCommentAtThreadUseCase.execute(useCasePayload))
       .rejects.toThrow(NotFoundError);
-
-    // Assert
     expect(mockCommentRepository.getCommentById).toHaveBeenCalledWith(useCasePayload.commentId);
   });
   it('should throw error when delete comment by another owner', async () => {
@@ -58,11 +56,9 @@ describe('DeleteCommentAtThreadUseCase', () => {
       commentRepository: mockCommentRepository,
     });
 
-    // Action
+    // Action & Assert
     await expect(deleteCommentAtThreadUseCase.execute(useCasePayload))
       .rejects.toThrow(AuthorizationError);
-
-    // Assert
     expect(mockCommentRepository.getCommentById)
       .toHaveBeenCalledWith(useCasePayload.commentId);
     expect(mockCommentRepository.verifyCommentOwner)
