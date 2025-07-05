@@ -53,9 +53,10 @@ describe('CommentRepositoryPostgres', () => {
       const deleteCommentToThreadPayload = 'comment-blablabla';
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 
-      // Action & Assert
-      await expect(commentRepositoryPostgres.deleteCommentToThread(deleteCommentToThreadPayload))
-        .resolves.not.toThrow();
+      // Action
+      await expect(commentRepositoryPostgres.deleteCommentToThread(deleteCommentToThreadPayload));
+
+      // Assert
       const deletedComment = await CommentTableTestHelper.findCommentById('comment-blablabla');
       expect(deletedComment[0].is_delete).toEqual(true);
     });
@@ -177,6 +178,22 @@ describe('CommentRepositoryPostgres', () => {
 
       // Action & Assert
       await expect(commentRepositoryPostgres.verifyCommentOwner('user-123', 'comment-123')).resolves.not.toThrow(AuthorizationError);
+    });
+  });
+  describe('getCommentByThreadId  function', () => {
+    it('should return comments using thread id correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadTableTestHelper.createThread({ id: 'thread-blbalbal' });
+      await CommentTableTestHelper.addCommentToThread({ threadId: 'thread-blbalbal' });
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
+
+      // Action
+      const comments = await commentRepositoryPostgres.getCommentsByThreadId('thread-blbalbal');
+
+      // Assert
+      expect(comments.length).toEqual(1);
+      expect(Array.isArray(comments)).toBe(true);
     });
   });
 });

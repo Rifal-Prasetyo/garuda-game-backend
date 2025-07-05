@@ -77,6 +77,21 @@ class CommentRepositoryPostgres extends CommentRepository {
     }
     return result.rows[0];
   }
+
+  async getCommentsByThreadId(threadId) {
+    const query = {
+      text: `
+          SELECT comments.id, users.username, comments.date, comments.content, comments."commentId", comments.is_delete
+    FROM comments
+    JOIN users ON comments.owner = users.id
+    WHERE comments."threadId" = $1
+    ORDER BY comments.date ASC
+      `,
+      values: [threadId],
+    };
+    const comments = await this._pool.query(query);
+    return comments.rows;
+  }
 }
 
 module.exports = CommentRepositoryPostgres;

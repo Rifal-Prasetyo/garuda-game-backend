@@ -6,6 +6,7 @@ const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres');
 const CommentTableTestHelper = require('../../../../tests/CommentTableTestHelper');
 const CreatedThread = require('../../../Domains/threads/entities/CreatedThread');
 const DetailThread = require('../../../Domains/threads/entities/DetailThread');
+const CommentRepository = require('../../../Domains/comments/CommentRepository');
 
 describe('ThreadRepository postgres', () => {
   afterEach(async () => {
@@ -69,7 +70,53 @@ describe('ThreadRepository postgres', () => {
         id: 'reply-124', threadId: 'thread-blbalabla', commentId: 'comment-123', date: reply2Date,
       });
       const idThread = 'thread-blbalabla';
-      const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
+
+      // mocking use case
+      const mockComments = [
+        {
+          id: 'comment-123',
+          username: 'dicoding',
+          date: comment1Date,
+          content: 'test comment',
+          commentId: null,
+          is_delete: false,
+        },
+        {
+          id: 'comment-124',
+          username: 'dicoding',
+          date: commnet2Date,
+          content: 'test comment',
+          commentId: null,
+          is_delete: true,
+        },
+        {
+          id: 'reply-123',
+          username: 'dicoding',
+          date: reply1Date,
+          content: 'test reply comment',
+          commentId: 'comment-123',
+          is_delete: true,
+        },
+        {
+          id: 'reply-124',
+          username: 'dicoding',
+          date: reply2Date,
+          content: 'test reply comment',
+          commentId: 'comment-123',
+          is_delete: false,
+        },
+      ];
+      const mockCommentRepository = new CommentRepository();
+
+      // mocking needed function
+      mockCommentRepository.getCommentsByThreadId = jest.fn()
+        .mockImplementation(() => Promise.resolve(mockComments));
+
+      const threadRepositoryPostgres = new ThreadRepositoryPostgres(
+        pool,
+        {},
+        mockCommentRepository,
+      );
 
       // Action
       const actualThreadRepositoryPostgres = await threadRepositoryPostgres

@@ -4,10 +4,11 @@ const CreatedThread = require('../../Domains/threads/entities/CreatedThread');
 const DetailThread = require('../../Domains/threads/entities/DetailThread');
 
 class ThreadRepositoryPostgres extends ThreadRepository {
-  constructor(pool, idGenerator) {
+  constructor(pool, idGenerator, commentRepository) {
     super();
     this._pool = pool;
     this._idGenerator = idGenerator;
+    this._commentRepository = commentRepository;
   }
 
   async createThread(createThread) {
@@ -30,18 +31,8 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     };
     const threadResult = await this._pool.query(threadQuery);
     const thread = threadResult.rows[0];
-    const commentQuery = {
-      text: `
-          SELECT comments.id, users.username, comments.date, comments.content, comments."commentId", comments.is_delete
-    FROM comments
-    JOIN users ON comments.owner = users.id
-    WHERE comments."threadId" = $1
-    ORDER BY comments.date ASC
-      `,
-      values: [id],
-    };
-    const comments = await this._pool.query(commentQuery);
-    return new DetailThread({ ...thread, comments: comments.rows });
+    const comments = await this._commentRepository.getCommentsByThreadId(id);
+    return new DetailThread({ ...thread, comments });
   }
 
   async verifyThreadAvailibility(id) {
