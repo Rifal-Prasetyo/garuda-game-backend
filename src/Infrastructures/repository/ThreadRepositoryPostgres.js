@@ -29,10 +29,9 @@ class ThreadRepositoryPostgres extends ThreadRepository {
        FROM threads JOIN users ON threads.owner = users.id WHERE threads.id = $1`,
       values: [id],
     };
-    const threadResult = await this._pool.query(threadQuery);
-    const thread = threadResult.rows[0];
+    const result = await this._pool.query(threadQuery);
     const comments = await this._commentRepository.getCommentsByThreadId(id);
-    return new DetailThread({ ...thread, comments });
+    return new DetailThread({ ...result.rows[0], comments });
   }
 
   async verifyThreadAvailibility(id) {
