@@ -123,6 +123,10 @@ describe('GetDetailThreadUseCase', () => {
     expect(actualGetDetailThreadUseCase).toStrictEqual(mockDetailThread);
     expect(mockThreadRepository.verifyThreadAvailibility)
       .toHaveBeenCalledWith(useCasePayload.threadId);
+    expect(mockThreadRepository.getDetailThread)
+      .toHaveBeenCalledWith(useCasePayload.threadId);
+    expect(mockCommentRepository.getCommentsByThreadId)
+      .toHaveBeenCalledWith(useCasePayload.threadId);
     expect(mockThreadRepository.getDetailThread).toHaveBeenCalledWith(useCasePayload.threadId);
   });
 });
