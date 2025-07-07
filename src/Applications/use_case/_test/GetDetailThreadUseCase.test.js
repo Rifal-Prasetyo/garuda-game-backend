@@ -2,6 +2,7 @@ const GetDetailThreadUseCase = require('../GetDetailThreadUseCase');
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
 const DetailThread = require('../../../Domains/threads/entities/DetailThread');
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
+const CommentRepository = require('../../../Domains/comments/CommentRepository');
 
 describe('GetDetailThreadUseCase', () => {
   it('should throw error when not meet data spesification', async () => {
@@ -41,6 +42,7 @@ describe('GetDetailThreadUseCase', () => {
 
     /** creating dependency of use case */
     const mockThreadRepository = new ThreadRepository();
+    const mockCommentRepository = new CommentRepository();
     const mockDetailThread = new DetailThread({
       id: 'thread-h_2FkLZhtgBKY2kh4CC02',
       title: 'sebuah thread',
@@ -53,6 +55,12 @@ describe('GetDetailThreadUseCase', () => {
           username: 'johndoe',
           date: new Date('2021-08-08T07:22:33.555Z'),
           content: 'sebuah comment',
+        },
+        {
+          id: 'comment-_pby3_tmXV6bcvcdev8xk',
+          username: 'johndoe',
+          date: new Date('2021-08-08T07:22:33.555Z'),
+          content: 'sebuah comment 2',
         },
         {
           id: 'reply-_pby2_tmXV6bcvcdev8xk',
@@ -68,32 +76,45 @@ describe('GetDetailThreadUseCase', () => {
     mockThreadRepository.verifyThreadAvailibility = jest.fn()
       .mockImplementation(() => Promise.resolve);
     mockThreadRepository.getDetailThread = jest.fn()
-      .mockImplementation(() => Promise.resolve(new DetailThread({
+      .mockImplementation(() => Promise.resolve({
         id: 'thread-h_2FkLZhtgBKY2kh4CC02',
         title: 'sebuah thread',
         body: 'sebuah body thread',
         date: new Date('2021-08-08T07:19:09.775Z'),
         username: 'dicoding',
-        comments: [
-          {
-            id: 'comment-_pby2_tmXV6bcvcdev8xk',
-            username: 'johndoe',
-            date: new Date('2021-08-08T07:22:33.555Z'),
-            content: 'sebuah comment',
-          },
-          {
-            id: 'reply-_pby2_tmXV6bcvcdev8xk',
-            username: 'johndoe',
-            date: new Date('2021-08-08T07:22:33.555Z'),
-            commentId: 'comment-_pby2_tmXV6bcvcdev8xk',
-            content: 'sebuah comment reply',
-          },
-        ],
-      })));
+      }));
+    mockCommentRepository.getCommentsByThreadId = jest.fn()
+      .mockImplementation(() => Promise.resolve([
+        {
+          id: 'comment-_pby2_tmXV6bcvcdev8xk',
+          username: 'johndoe',
+          date: new Date('2021-08-08T07:22:33.555Z'),
+          content: 'sebuah comment',
+          commentId: null,
+          is_delete: null,
+        },
+        {
+          id: 'comment-_pby3_tmXV6bcvcdev8xk',
+          username: 'johndoe',
+          date: new Date('2021-08-08T07:22:33.555Z'),
+          content: 'sebuah comment 2',
+          commentId: null,
+          is_delete: null,
+        },
+        {
+          id: 'reply-_pby2_tmXV6bcvcdev8xk',
+          username: 'johndoe',
+          date: new Date('2021-08-08T07:22:33.555Z'),
+          content: 'sebuah comment reply',
+          commentId: 'comment-_pby2_tmXV6bcvcdev8xk',
+          is_delete: null,
+        },
+      ]));
 
     /** creating use case instance */
     const getDetailThreadUseCase = new GetDetailThreadUseCase({
       threadRepository: mockThreadRepository,
+      commentRepository: mockCommentRepository,
     });
 
     // Action
