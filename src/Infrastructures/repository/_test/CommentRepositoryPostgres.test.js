@@ -196,4 +196,20 @@ describe('CommentRepositoryPostgres', () => {
       expect(Array.isArray(comments)).toBe(true);
     });
   });
+  describe('likeCommentById function', () => {
+    it('should like comment correctly', async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({ id: 'user-123' });
+      await ThreadTableTestHelper.createThread({ id: 'thread-blbalbal' });
+      await CommentTableTestHelper.addCommentToThread({ threadId: 'thread-blbalbal' });
+      const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
+
+      // Action
+      await commentRepositoryPostgres.likeCommentById('user-123', 'comment-123');
+
+      // Assert
+      const getComment = await commentRepositoryPostgres.getCommentById('comment-123');
+      expect(getComment.likeCount).toEqual(1);
+    });
+  });
 });
