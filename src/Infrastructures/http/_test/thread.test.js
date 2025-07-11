@@ -386,6 +386,27 @@ describe('/threads endpoint', () => {
       expect(addReplyComment.message).toBeDefined();
     });
   });
+  describe('when PUT /threads/{threadId}/comments/{commentId}/likes', () => {
+    it('should response 200(OK) when comment has liked correctly', async () => {
+      // Arrange
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: 'PUT',
+        url: `/threads/${threadId}/comments/${commentId}/likes`,
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      // Expect
+      const likeComment = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(likeComment.status).toEqual('success');
+      expect(likeComment.message).toBeDefined();
+    });
+  });
   describe('when DELETE /threads/{threadId}/comments/{commentId}/replies/{replyId}', () => {
     it('should response 200(OK) when delete reply comment to thread correctly', async () => {
       // Arrange
