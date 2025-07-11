@@ -55,12 +55,14 @@ describe('GetDetailThreadUseCase', () => {
           username: 'johndoe',
           date: new Date('2021-08-08T07:22:33.555Z'),
           content: 'sebuah comment',
+          likeCount: 1,
         },
         {
           id: 'comment-_pby3_tmXV6bcvcdev8xk',
           username: 'johndoe',
           date: new Date('2021-08-08T07:22:33.555Z'),
           content: 'sebuah comment 2',
+          likeCount: 2,
         },
         {
           id: 'reply-_pby2_tmXV6bcvcdev8xk',
@@ -68,6 +70,7 @@ describe('GetDetailThreadUseCase', () => {
           date: new Date('2021-08-08T07:22:33.555Z'),
           commentId: 'comment-_pby2_tmXV6bcvcdev8xk',
           content: 'sebuah comment reply',
+          likeCount: 3,
         },
       ],
     });
@@ -92,6 +95,7 @@ describe('GetDetailThreadUseCase', () => {
           content: 'sebuah comment',
           commentId: null,
           is_delete: null,
+          likeCount: 1,
         },
         {
           id: 'comment-_pby3_tmXV6bcvcdev8xk',
@@ -100,6 +104,7 @@ describe('GetDetailThreadUseCase', () => {
           content: 'sebuah comment 2',
           commentId: null,
           is_delete: null,
+          likeCount: 2,
         },
         {
           id: 'reply-_pby2_tmXV6bcvcdev8xk',
@@ -108,6 +113,7 @@ describe('GetDetailThreadUseCase', () => {
           content: 'sebuah comment reply',
           commentId: 'comment-_pby2_tmXV6bcvcdev8xk',
           is_delete: null,
+          likeCount: 3,
         },
       ]));
 
