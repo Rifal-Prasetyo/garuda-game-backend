@@ -24,6 +24,7 @@ describe('DetailThread entity', () => {
           username: true,
           date: true,
           content: true,
+          likeCount: true,
         },
       ],
     };
@@ -46,6 +47,7 @@ describe('DetailThread entity', () => {
           date: new Date('2022-01-01T01:00:00.000Z'),
           content: 'Komentar pertama',
           is_delete: false,
+          likeCount: 1,
         },
         {
           id: 'comment-2',
@@ -53,6 +55,7 @@ describe('DetailThread entity', () => {
           date: new Date('2022-01-01T01:00:00.000Z'),
           content: 'Komentar kedua',
           is_delete: false,
+          likeCount: 2,
         },
         {
           id: 'reply-1',
@@ -61,6 +64,7 @@ describe('DetailThread entity', () => {
           content: 'Balasan komentar 1',
           commentId: 'comment-1',
           is_delete: false,
+          likeCount: 3,
         },
       ],
     };
@@ -88,6 +92,8 @@ describe('DetailThread entity', () => {
     expect(comment1.date).toBeInstanceOf(Date);
     expect(comment1.content).toBe('Komentar pertama');
     expect(typeof comment1.content).toBe('string');
+    expect(comment1.likeCount).toBe(1);
+    expect(typeof comment1.likeCount).toBe('number');
     expect(Array.isArray(comment1.replies)).toBe(true);
     expect(comment1.replies.length).toBe(1);
     const comment2 = detailThread.comments[1];
@@ -98,6 +104,8 @@ describe('DetailThread entity', () => {
     expect(comment2.date).toBeInstanceOf(Date);
     expect(comment2.content).toBe('Komentar kedua');
     expect(typeof comment2.content).toBe('string');
+    expect(comment2.likeCount).toBe(2);
+    expect(typeof comment2.likeCount).toBe('number');
     expect(Array.isArray(comment2.replies)).toBe(true);
     expect(comment2.replies.length).toEqual(0);
     const reply = comment1.replies[0];
@@ -107,6 +115,7 @@ describe('DetailThread entity', () => {
     expect(typeof reply.username).toBe('string');
     expect(reply.date).toBeInstanceOf(Date);
     expect(reply.content).toBe('Balasan komentar 1');
+    expect(typeof comment23likeCount).toBe('number');
     expect(typeof reply.content).toBe('string');
     expect(reply.commentId).toBeUndefined();
     expect(reply.is_delete).toBeUndefined();
@@ -127,6 +136,7 @@ describe('DetailThread entity', () => {
           date: new Date('2022-02-02T01:00:00.000Z'),
           content: 'Komentar yang dihapus',
           is_delete: true,
+          likeCount: 1,
         },
         {
           id: 'reply-del',
@@ -135,6 +145,7 @@ describe('DetailThread entity', () => {
           content: 'Balasan yang dihapus',
           commentId: 'comment-del',
           is_delete: true,
+          likeCount: 2,
         },
       ],
     };
