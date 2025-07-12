@@ -29,6 +29,7 @@ class DetailThread {
       const replies = (repliesMap[comment.id] || []).map((reply) => ({
         ...reply,
         content: reply.is_delete ? '**balasan telah dihapus**' : reply.content,
+        likeCount: Number(comment.likeCount),
         commentId: undefined,
         is_delete: undefined,
       }));
@@ -37,6 +38,7 @@ class DetailThread {
         ...comment,
         content: comment.is_delete ? '**komentar telah dihapus**' : comment.content,
         replies,
+        likeCount: Number(comment.likeCount),
         commentId: undefined,
         is_delete: undefined,
       };
