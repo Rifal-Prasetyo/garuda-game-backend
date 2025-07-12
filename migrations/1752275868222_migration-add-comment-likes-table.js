@@ -14,30 +14,31 @@ exports.up = (pgm) => {
       type: 'VARCHAR(50)',
       notNull: true,
     },
-    comment_id: {
+    commentId: {
       type: 'VARCHAR(50)',
       notNull: true,
-      unique: true,
     },
-    user_id: {
+    userId: {
       type: 'VARCHAR(50)',
       notNull: true,
-      unique: true,
     },
+  });
+  pgm.addConstraint('comment_likes', 'unique_comment_user_like', {
+    unique: ['commentId', 'userId'],
   });
   pgm.addConstraint('comment_likes', 'fk_comments_likes.comment_id_comment_id', {
     foreignKeys: {
-      columns: 'comment_id',
+      columns: 'commentId',
       references: 'comments(id)',
-      onDelete: 'SET NULL',
+      onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
   });
   pgm.addConstraint('comment_likes', 'fk_comments_likes.user_id_user_id', {
     foreignKeys: {
-      columns: 'user_id',
+      columns: 'userId',
       references: 'users(id)',
-      onDelete: 'SET NULL',
+      onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     },
   });
@@ -49,7 +50,7 @@ exports.up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 exports.down = (pgm) => {
-  pgm.dropTable('comment_likes');
   pgm.dropConstraint('comment_likes', 'fk_comments_likes.comment_id_comment_id');
   pgm.dropConstraint('comment_likes', 'fk_comments_likes.user_id_user_id');
+  pgm.dropTable('comment_likes');
 };

@@ -68,7 +68,11 @@ class CommentRepositoryPostgres extends CommentRepository {
 
   async getCommentById(id) {
     const query = {
-      text: 'SELECT * FROM comments WHERE id = $1',
+      text: `SELECT comments.*, COUNT(comment_likes."commentId") AS "likeCount"
+             FROM comments
+             LEFT JOIN comment_likes ON comments.id = comment_likes."commentId"
+             WHERE comments.id = $1
+             GROUP BY comments.id`,
       values: [id],
     };
     const result = await this._pool.query(query);
@@ -81,16 +85,54 @@ class CommentRepositoryPostgres extends CommentRepository {
   async getCommentsByThreadId(threadId) {
     const query = {
       text: `
-          SELECT comments.id, users.username, comments.date, comments.content, comments."commentId", comments.is_delete
+    SELECT
+      comments.id,
+      users.username,
+      comments.date,
+      comments.content,
+      comments."commentId",
+      comments.is_delete,
+      COUNT(comment_likes."commentId") AS "likeCount"
     FROM comments
     JOIN users ON comments.owner = users.id
+    LEFT JOIN comment_likes ON comments.id = comment_likes."commentId"
     WHERE comments."threadId" = $1
+    GROUP BY
+      comments.id,
+      users.username,
+      comments.date,
+      comments.content,
+      comments."commentId",
+      comments.is_delete
     ORDER BY comments.date ASC
-      `,
+  `,
       values: [threadId],
     };
     const comments = await this._pool.query(query);
     return comments.rows;
+  }
+
+  async likeComment(commentId, userId) {
+    const checkQuery = {
+      text: 'SELECT id FROM comment_likes WHERE "commentId" = $1 AND "userId" = $2',
+      values: [commentId, userId],
+    };
+    const result = await this._pool.query(checkQuery);
+
+    if (result.rowCount > 0) {
+      const deleteQuery = {
+        text: 'DELETE FROM comment_likes WHERE "commentId" = $1 AND "userId" = $2',
+        values: [commentId, userId],
+      };
+      await this._pool.query(deleteQuery);
+    } else {
+      const id = `likes-${this._idGenerator()}`;
+      const insertQuery = {
+        text: 'INSERT INTO comment_likes (id, "commentId", "userId") VALUES ($1, $2, $3)',
+        values: [id, commentId, userId],
+      };
+      await this._pool.query(insertQuery);
+    }
   }
 }
 

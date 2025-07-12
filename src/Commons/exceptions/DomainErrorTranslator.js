@@ -33,6 +33,7 @@ DomainErrorTranslator._directories = {
   'ADD_REPLY_COMMENT_USE_CASE.NOT_MEET_DATA_SPESIFICATION': new InvariantError('tidak dapat menambahkan balasan komen ke thread karena tipe data tidak sesuai'),
   'DELETE_REPLY_COMMENT_USE_CASE.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat menghapus balasan komen ke thread  karena properti yang dibutuhkan tidak ada'),
   'DELETE_REPLY_COMMENT_USE_CASE.NOT_MEET_DATA_SPESIFICATION': new InvariantError('tidak dapat menghapus balasan komen ke thread karena tipe data tidak sesuai'),
+  'LIKE_COMMENT_USE_CASE.NOT_MEET_DATA_SPESIFICATION': new InvariantError('tidak dapat menyukai atau menghilangkan like pada komen  karena tipe data tidak sesuai'),
 };
 
 module.exports = DomainErrorTranslator;

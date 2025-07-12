@@ -4,11 +4,25 @@ const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
 const LikeCommentUseCase = require('../LikeCommentUseCase');
 
 describe('LikeCommentUseCase', () => {
+  it('should throw error when not meet data spesification', async () => {
+    // Arrange
+    const payload = {
+      threadId: true,
+      commentId: true,
+      userId: true,
+    };
+    // Action
+    const likeCommentUseCase = new LikeCommentUseCase({});
+
+    // Assert
+    await expect(likeCommentUseCase.execute(payload)).rejects.toThrow('LIKE_COMMENT_USE_CASE.NOT_MEET_DATA_SPESIFICATION');
+  });
   it('should throw error when thread not found', async () => {
     // Arrange
     const payload = {
       threadId: 'thread-notfound',
       commentId: 'comment-notfound',
+      userId: 'user-notFound',
     };
     const mockThreadRepository = new ThreadRepository();
 
@@ -31,6 +45,7 @@ describe('LikeCommentUseCase', () => {
     const payload = {
       threadId: 'thread-notfound',
       commentId: 'comment-notfound',
+      userId: 'user-notFound',
     };
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
@@ -50,13 +65,14 @@ describe('LikeCommentUseCase', () => {
     // Assert
     await expect(likeCommentUseCase.execute(payload)).rejects.toThrow(NotFoundError);
     expect(mockThreadRepository.verifyThreadAvailibility).toHaveBeenCalledWith(payload.threadId);
-    expect(mockCommentRepository.likeCommentById).toHaveBeenCalledWith(payload.commentId);
+    expect(mockCommentRepository.getCommentById).toHaveBeenCalledWith(payload.commentId);
   });
   it('should success like comment', async () => {
     // Arrange
     const payload = {
-      threadId: 'thread-notfound',
-      commentId: 'comment-notfound',
+      threadId: 'thread-123',
+      commentId: 'comment-123',
+      userId: 'user-123',
     };
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
@@ -66,7 +82,7 @@ describe('LikeCommentUseCase', () => {
       .mockImplementation(() => Promise.resolve());
     mockCommentRepository.getCommentById = jest.fn()
       .mockImplementation(() => Promise.resolve());
-    mockCommentRepository.likeCommentById = jest.fn()
+    mockCommentRepository.likeComment = jest.fn()
       .mockImplementation(() => Promise.resolve());
 
     // Action
@@ -79,6 +95,6 @@ describe('LikeCommentUseCase', () => {
     await expect(likeCommentUseCase.execute(payload)).resolves.not.toThrow(NotFoundError);
     expect(mockThreadRepository.verifyThreadAvailibility).toHaveBeenCalledWith(payload.threadId);
     expect(mockCommentRepository.getCommentById).toHaveBeenCalledWith(payload.commentId);
-    expect(mockCommentRepository.likeCommentById).toHaveBeenCalledWith(payload.commentId, 'user-123');
+    expect(mockCommentRepository.likeComment).toHaveBeenCalledWith(payload.commentId, 'user-123');
   });
 });

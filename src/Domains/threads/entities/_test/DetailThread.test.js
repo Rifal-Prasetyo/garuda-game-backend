@@ -115,7 +115,6 @@ describe('DetailThread entity', () => {
     expect(typeof reply.username).toBe('string');
     expect(reply.date).toBeInstanceOf(Date);
     expect(reply.content).toBe('Balasan komentar 1');
-    expect(typeof comment23likeCount).toBe('number');
     expect(typeof reply.content).toBe('string');
     expect(reply.commentId).toBeUndefined();
     expect(reply.is_delete).toBeUndefined();
