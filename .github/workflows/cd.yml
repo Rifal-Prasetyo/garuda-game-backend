@@ -25,11 +25,8 @@ jobs:
           username: rifal
           key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
           script: |
-            echo "[INFO] Checking tools"
-            node -v
-            npm -v
-            pm2 -v
-            cd ~/projects/garuda-game-backend
+            export PATH="/home/rifal/.nvm/versions/node/v22.15.0/bin:$PATH"
+            cd /home/rifal/projects/garuda-game-backend
             git pull origin main
             npm i
             npm run migrate up
