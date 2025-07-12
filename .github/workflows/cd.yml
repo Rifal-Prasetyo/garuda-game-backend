@@ -1,0 +1,32 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      
+      - name:  Install Tailscale
+        run: |
+          curl -fsSL https://tailscale.com/install.sh | sh
+          sudo tailscale up --authkey ${{ secrets.TAILSCALE_AUTH_KEY }} --hostname github-ci --accept-routes
+
+      - name: SSH and deploy app
+        uses: appleboy/ssh-action@v0.1.6
+        with:   
+          host: ${{ secrets.VPS_TAILSCALE_IP }}
+          username: rifal
+          key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+          script: |
+            cd ~/projects/garuda-game-backend
+            git pull origin main
+            npm install
+            npm run migrate up
+            pm2 restart forum-api
