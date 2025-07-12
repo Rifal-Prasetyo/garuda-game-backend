@@ -44,6 +44,14 @@ const routes = (handler) => ([
       auth: 'garudaApiJWT',
     },
   },
+  {
+    method: 'PUT',
+    path: '/threads/{threadId}/comments/{commentId}/likes',
+    handler: handler.putLikeCommentHandler,
+    options: {
+      auth: 'garudaApiJWT',
+    },
+  },
 ]);
 
 module.exports = routes;
