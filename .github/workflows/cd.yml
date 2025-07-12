@@ -25,6 +25,11 @@ jobs:
           username: rifal
           key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
           script: |
+            echo $PATH
+            export PATH=$PATH:/usr/local/bin:/usr/bin:/bin
+            which node
+            which npm
+            which pm2
             cd ~/projects/garuda-game-backend
             git pull origin main
             npm i
