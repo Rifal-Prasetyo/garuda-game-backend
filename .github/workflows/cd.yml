@@ -27,6 +27,6 @@ jobs:
           script: |
             cd ~/projects/garuda-game-backend
             git pull origin main
-            npm install
+            npm i
             npm run migrate up
             pm2 restart forum-api
